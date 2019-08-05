@@ -1,0 +1,12 @@
+apiVersion: v1
+appVersion: "10.0.0"
+description: CloudKitty aims at filling the gap between metrics collection systems like ceilometer and a billing system.
+name: cloudkitty
+version: 0.1.0
+home: https://github.com/ObjectifLibre/cloudkitty-chart
+sources:
+  - https://github.com/openstack/cloudkitty
+maintainers:
+  - name: aimbot31
+    email: florian.davasse@objectif-libre.com
+    url: https://github.com/ObjectifLibre/cloudkitty-chart

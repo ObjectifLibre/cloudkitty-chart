@@ -1,0 +1,13 @@
+dependencies:
+  - name: influxdb
+    version: 1.3.1
+    repository: "@stable"
+    condition: influxdb.enabled,global.influxdb.enabled
+  - name: redis
+    version: 9.0.1
+    repository: "@stable"
+    condition: redis.enabled,global.redis.enabled
+  - name: mariadb
+    version: 6.7.4
+    repository: "@stable"
+    condition: mariadb.enabled,global.mariadb.enabled

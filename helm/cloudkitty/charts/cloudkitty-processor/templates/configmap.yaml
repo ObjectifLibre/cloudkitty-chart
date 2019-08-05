@@ -1,0 +1,36 @@
+[DEFAULT]
+debug = true
+transport_url = rabbit://guest:guest@rabbitmq/
+auth_strategy = noauth
+
+[database]
+connection = mysql+pymysql://cloudkitty:ckdbpass@mariadb/cloudkitty
+
+[collect]
+collector = prometheus
+period = 300
+wait_periods = 0
+scope_key=name
+
+[storage]
+backend = influxdb
+version = 2
+
+[storage_influxdb]
+username = cloudkitty
+password = cloudkitty
+database = cloudkitty
+host = influxdb
+
+[collector_prometheus]
+prometheus_url = http://prometheus:9090/api/v1
+
+[fetcher]
+backend = keystone
+
+[fetcher_keystone]
+auth_section = ks_auth
+keystone_version = 3
+
+[orchestrator]
+coordination_url = redis://redis:6379

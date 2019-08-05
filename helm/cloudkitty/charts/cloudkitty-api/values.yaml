@@ -5,12 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: objectiflibre/cloudkitty-api
+  tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
-nameOverride: ""
+nameOverride: "cloudkitty-api"
 fullnameOverride: ""
 
 service:

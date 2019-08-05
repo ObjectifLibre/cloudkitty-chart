@@ -11,3 +11,11 @@ dependencies:
     version: 6.7.4
     repository: "@stable"
     condition: mariadb.enabled,global.mariadb.enabled
+  - name: cloudkitty-processor
+    version: 0.1.0
+    repository: "./charts"
+    condition: cloudkitty-processor.enabled,global.cloudkitty-processor.enabled
+  - name: cloudkitty-api
+    version: 0.1.0
+    repository: "./charts"
+    condition: cloudkitty-api.enabled,global.cloudkitty-api.enabled

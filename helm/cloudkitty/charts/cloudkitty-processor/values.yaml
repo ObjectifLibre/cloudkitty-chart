@@ -5,12 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: objectiflibre/cloudkitty-processor
+  tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
-nameOverride: ""
+nameOverride: "cloudkitty-processor"
 fullnameOverride: ""
 
 service:

@@ -4,32 +4,10 @@ data:
     [DEFAULT]
     debug = true
     transport_url = rabbit://guest:guest@rabbitmq/
-    auth_strategy = keystone
-
-    [ks_auth]
-    auth_type = v3password
-    auth_protocol = http
-    auth_url = http://keystone:5000/v3
-    identity_uri = http://keystone:35357/v3
-    username = cloudkitty
-    password = ckpass
-    project_name = service
-    user_domain_name = default
-    project_domain_name = default
-    debug = true
-
-    [keystone_authtoken]
-    auth_section = ks_auth
-    memcached_servers = memcached:11211
+    auth_strategy = no_auth
 
     [database]
     connection = mysql+pymysql://cloudkitty:ckdbpass@mariadb/cloudkitty
-
-    [collect]
-    collector = prometheus
-    period = 300
-    wait_periods = 0
-    scope_key=name
 
     [storage]
     backend = influxdb
@@ -40,21 +18,6 @@ data:
     password = cloudkitty
     database = cloudkitty
     host = influxdb
-
-
-    [collector_prometheus]
-    prometheus_url = http://prometheus:9090/api/v1
-
-    [fetcher]
-    backend = keystone
-
-    [fetcher_keystone]
-    auth_section = ks_auth
-    keystone_version = 3
-
-
-    [orchestrator]
-    coordination_url = redis://redis:6379
 kind: ConfigMap
 metadata:
   creationTimestamp: "2019-08-05T12:42:05Z"

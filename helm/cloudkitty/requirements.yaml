@@ -11,11 +11,15 @@ dependencies:
     version: 6.7.4
     repository: "@stable"
     condition: mariadb.enabled,global.mariadb.enabled
+  - name: rabbitmq
+    version: 6.2.3
+    repository: "@stable"
+    condition: rabbitmq.enabled,global.rabbitmq.enabled
   - name: cloudkitty-processor
     version: 0.1.0
-    repository: "./charts"
+    repository: "file://charts/cloudkitty-processor/"
     condition: cloudkitty-processor.enabled,global.cloudkitty-processor.enabled
   - name: cloudkitty-api
     version: 0.1.0
-    repository: "./charts"
+    repository: "file://charts/cloudkitty-api"
     condition: cloudkitty-api.enabled,global.cloudkitty-api.enabled

@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: objectiflibre/cloudkitty-api
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: "cloudkitty-api"
@@ -30,6 +30,13 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+config:
+  name: cloudkitty-config
+
+secret:
+  enabled: true
+  name: cloudkitty-secret
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

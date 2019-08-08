@@ -36,8 +36,32 @@ spec:
             httpGet:
               path: /
               port: http
+          volumeMounts:
+            - name: workdir
+              mountPath: /etc/cloudkitty/cloudkitty.conf
+              subPath: cloudkitty.conf
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      initContainers:
+      - name: init-secrets
+        image: busybox:1.28
+        command: ['sh', '-c', 'cp /etc/cloudkitty-config/cloudkitty.conf /etc/cloudkitty/cloudkitty.conf; for i in /etc/cloudkitty-secret/*; do pass=$(cat $i); i="$"${i##*/}; sed -i "s/$i/$pass/" /etc/cloudkitty/cloudkitty.conf; done']
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/cloudkitty-config
+          - name: secret-ck
+            mountPath: /etc/cloudkitty-secret
+          - name: workdir
+            mountPath: /etc/cloudkitty
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Values.config.name }}
+        - name: workdir
+          emptyDir: {}
+        - name: secret-ck
+          secret:
+            secretName: {{ .Values.secret.name }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

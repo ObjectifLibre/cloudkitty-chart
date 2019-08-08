@@ -1,25 +1,24 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  namespace: {{ .Release.Namespace }}
 data:
   cloudkitty.conf: |-
     [DEFAULT]
     debug = true
-    transport_url = rabbit://guest:guest@rabbitmq/
-    auth_strategy = no_auth
+    transport_url = rabbit://$USER_RABBIT:$PASSWORD_RABBIT@rabbitmq/
+    auth_strategy = noauth
 
     [database]
-    connection = mysql+pymysql://cloudkitty:ckdbpass@mariadb/cloudkitty
+    connection = mysql+pymysql://$USER_DB:$PASSWORD_DB@mariadb/cloudkitty
 
     [storage]
     backend = influxdb
     version = 2
 
     [storage_influxdb]
-    username = cloudkitty
-    password = cloudkitty
+    username = $USER_BACKEND
+    password = $PASSWORD_BACKEND
     database = cloudkitty
     host = influxdb
-kind: ConfigMap
-metadata:
-  creationTimestamp: "2019-08-05T12:42:05Z"
-  name: cloudkitty.conf
-  namespace: cloudkitty

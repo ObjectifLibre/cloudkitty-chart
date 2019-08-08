@@ -11,6 +11,9 @@ redis:
 influxdb:
   enabled: false
 
+rabbitmq:
+  enabled: true
+
 cloudkitty-processor:
   enabled: false
 

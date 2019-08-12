@@ -38,8 +38,7 @@ spec:
               port: http
           volumeMounts:
             - name: workdir
-              mountPath: /etc/cloudkitty/cloudkitty.conf
-              subPath: cloudkitty.conf
+              mountPath: /etc/cloudkitty-config
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       initContainers:
@@ -51,6 +50,21 @@ spec:
             mountPath: /etc/cloudkitty-config
           - name: secret-ck
             mountPath: /etc/cloudkitty-secret
+          - name: workdir
+            mountPath: /etc/cloudkitty
+      - name: init-sql
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup {{ .Values.config.credentials.sql.host }}; do echo waiting for SQL; sleep 2; done;"]
+      - name: init-timeseries
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup {{ .Values.config.credentials.timeseries.host }}; do echo waiting for TIMESERIES; sleep 2; done;"]
+      - name: init-amqp
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup {{ .Values.config.credentials.amqp.host }}; do echo waiting for AMQP; sleep 2; done;"]
+      - name: init-db-storage
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command: ['sh', '-c', 'cloudkitty-storage-init && cloudkitty-dbsync upgrade']
+        volumeMounts:
           - name: workdir
             mountPath: /etc/cloudkitty
       volumes:

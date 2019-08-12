@@ -7,11 +7,11 @@ data:
   cloudkitty.conf: |-
     [DEFAULT]
     debug = true
-    transport_url = rabbit://$USER_RABBIT:$PASSWORD_RABBIT@rabbitmq/
+    transport_url = rabbit://$USER_RABBIT:$PASSWORD_RABBIT@$HOST_RABBIT/
     auth_strategy = noauth
 
     [database]
-    connection = mysql+pymysql://$USER_DB:$PASSWORD_DB@mariadb/cloudkitty
+    connection = mysql+pymysql://$USER_DB:$PASSWORD_DB@$HOST_DB/$DATABASE_DB
 
     [storage]
     backend = influxdb
@@ -21,4 +21,6 @@ data:
     username = $USER_BACKEND
     password = $PASSWORD_BACKEND
     database = cloudkitty
-    host = influxdb
+    host = $HOST_BACKEND
+  metrics.yaml: |-
+    slt

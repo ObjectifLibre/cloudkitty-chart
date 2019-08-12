@@ -33,6 +33,21 @@ ingress:
 
 config:
   name: cloudkitty-config
+  credentials:
+    sql:
+      host: test-cloudkitty-mariadb.cloudkitty.svc.cluster.local
+      user: "cloudkitty"
+      password: "cloudkitty"
+      database: "cloudkitty"
+    timeseries:
+      host: test-cloudkitty-influxdb.cloudkitty.svc.cluster.local
+      user: "cloudkitty"
+      password: "cloudkitty"
+    amqp:
+      host: test-cloudkitty-rabbitmq.cloudkitty.svc.cluster.local
+      user: "cloudkitty"
+      password: "cloudkitty"
+
 
 secret:
   enabled: true

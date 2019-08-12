@@ -3,16 +3,40 @@
 # Declare variables to be passed into your templates.
 
 mariadb:
-  enabled: false
+  enabled: true
+  rbac:
+    create: true
+  db:
+    user: "cloudkitty"
+    password: "cloudkitty"
+    name: "cloudkitty"
 
 redis:
-  enabled: false
+  enabled: true
+  rbac:
+    create: true
+  password: "cloudkitty"
 
 influxdb:
-  enabled: false
+  enabled: true
+  setDefaultUser:
+    enabled: true
+    user:
+      username: "cloudkitty"
+      password: "cloudkitty"
+  initScripts:
+    enabled: true
+    scripts:
+      init.iql: |+
+        CREATE DATABASE "cloudkitty" WITH DURATION 365d REPLICATION 1 NAME "rp_365d"
 
 rabbitmq:
   enabled: true
+  rabbitmq:
+    username: "cloudkitty"
+    password: "cloudkitty"
+  metrics:
+    enabled: true
 
 cloudkitty-processor:
   enabled: false

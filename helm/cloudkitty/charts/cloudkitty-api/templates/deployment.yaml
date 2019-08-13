@@ -38,13 +38,13 @@ spec:
               port: http
           volumeMounts:
             - name: workdir
-              mountPath: /etc/cloudkitty-config
+              mountPath: /etc/cloudkitty
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       initContainers:
       - name: init-secrets
         image: busybox:1.28
-        command: ['sh', '-c', 'cp /etc/cloudkitty-config/cloudkitty.conf /etc/cloudkitty/cloudkitty.conf; for i in /etc/cloudkitty-secret/*; do pass=$(cat $i); i="$"${i##*/}; sed -i "s/$i/$pass/" /etc/cloudkitty/cloudkitty.conf; done']
+        command: ['sh', '-c', 'cp /etc/cloudkitty-config/* /etc/cloudkitty/; for i in /etc/cloudkitty-secret/*; do pass=$(cat $i); i="$"${i##*/}; sed -i "s/$i/$pass/" /etc/cloudkitty/cloudkitty.conf; done;']
         volumeMounts:
           - name: config-volume
             mountPath: /etc/cloudkitty-config

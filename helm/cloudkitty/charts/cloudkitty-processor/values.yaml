@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: objectiflibre/cloudkitty-processor
+  repository: aimbot31/cloudkitty-processor
   tag: latest
   pullPolicy: IfNotPresent
 

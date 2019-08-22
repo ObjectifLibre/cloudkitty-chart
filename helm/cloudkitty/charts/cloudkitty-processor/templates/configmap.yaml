@@ -1,36 +1,71 @@
-[DEFAULT]
-debug = true
-transport_url = rabbit://guest:guest@rabbitmq/
-auth_strategy = noauth
+{{- if .Values.config.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  namespace: {{ .Release.Namespace }}
+data:
+  cloudkitty.conf: |-
+    [DEFAULT]
+    debug = true
+    transport_url = rabbit://$USER_RABBIT:$PASSWORD_RABBIT@$HOST_RABBIT/
+    auth_strategy = noauth
 
-[database]
-connection = mysql+pymysql://cloudkitty:ckdbpass@mariadb/cloudkitty
+    [database]
+    connection = mysql+pymysql://$USER_DB:$PASSWORD_DB@$HOST_DB/$DATABASE_DB
 
-[collect]
-collector = prometheus
-period = 300
-wait_periods = 0
-scope_key=name
+    [storage]
+    backend = influxdb
+    version = 2
 
-[storage]
-backend = influxdb
-version = 2
+    [storage_influxdb]
+    username = $USER_BACKEND
+    password = $PASSWORD_BACKEND
+    database = cloudkitty
+    host = $HOST_BACKEND
+    retention_policy = "rp_365d"
 
-[storage_influxdb]
-username = cloudkitty
-password = cloudkitty
-database = cloudkitty
-host = influxdb
+    [collect]
+    collector = prometheus
+    period = 300
+    wait_periods = 0
+    scope_key = function_name
 
-[collector_prometheus]
-prometheus_url = http://prometheus:9090/api/v1
+    [collector_prometheus]
+    prometheus_url = $HOST_PROMETHEUS
 
-[fetcher]
-backend = keystone
+    [fetcher]
+    backend = prometheus
 
-[fetcher_keystone]
-auth_section = ks_auth
-keystone_version = 3
+    [fetcher_prometheus]
+    prometheus_url = $HOST_PROMETHEUS
+    scope_attribute = function_name
+    metric = gateway_functions_seconds_count
 
-[orchestrator]
-coordination_url = redis://redis:6379
+    [orchestrator]
+    coordination_url = redis://$USER_CACHE:$PASSWORD_CACHE@$HOST_CACHE:6379
+  metrics.yml: |-
+    metrics:
+      gateway_functions_seconds_count:
+        unit: seconds
+        groupby:
+          - function_name
+          - instance
+        extra_args:
+          aggregation_method: count
+      gateway_functions_seconds_sum:
+        unit: seconds
+        groupby:
+          - function_name
+          - instance
+        extra_args:
+          aggregation_method: count
+      gateway_function_invocation_total:
+        unit: request
+        groupby:
+          - function_name
+          - instance
+          - code
+        extra_args:
+          aggregation_method: count
+{{- end }}

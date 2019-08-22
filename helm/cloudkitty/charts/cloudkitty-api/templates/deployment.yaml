@@ -44,7 +44,7 @@ spec:
       initContainers:
       - name: init-secrets
         image: busybox:1.28
-        command: ['sh', '-c', 'cp /etc/cloudkitty-config/* /etc/cloudkitty/; for i in /etc/cloudkitty-secret/*; do pass=$(cat $i); i="$"${i##*/}; sed -i "s/$i/$pass/" /etc/cloudkitty/cloudkitty.conf; done;']
+        command: ['sh', '-c', 'cp /etc/cloudkitty-config/* /etc/cloudkitty/; for i in /etc/cloudkitty-secret/*; do pass=$(cat $i); i="$"${i##*/}; sed -i "s|$i|$pass|" /etc/cloudkitty/cloudkitty.conf; done;']
         volumeMounts:
           - name: config-volume
             mountPath: /etc/cloudkitty-config

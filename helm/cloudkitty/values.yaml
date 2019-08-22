@@ -39,7 +39,7 @@ rabbitmq:
     enabled: true
 
 cloudkitty-processor:
-  enabled: false
+  enabled: true
 
 cloudkitty-api:
   enabled: true

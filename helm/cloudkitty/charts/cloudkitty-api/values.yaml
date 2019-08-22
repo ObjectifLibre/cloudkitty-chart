@@ -14,8 +14,8 @@ nameOverride: "cloudkitty-api"
 fullnameOverride: ""
 
 service:
-  type: ClusterIP
-  port: 80
+  type: NodePort
+  port: 8889
 
 ingress:
   enabled: false
@@ -32,7 +32,8 @@ ingress:
   #      - chart-example.local
 
 config:
-  name: cloudkitty-config
+  enabled: true
+  name: cloudkitty-api-config
   credentials:
     sql:
       host: test-cloudkitty-mariadb.cloudkitty.svc.cluster.local
@@ -51,7 +52,7 @@ config:
 
 secret:
   enabled: true
-  name: cloudkitty-secret
+  name: cloudkitty-api-secret
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

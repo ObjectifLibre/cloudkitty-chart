@@ -24,20 +24,58 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          # ports:
+          #   - name: http
+          #     containerPort: 80
+          #     protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: workdir
+              mountPath: /etc/cloudkitty
+      initContainers:
+      - name: init-secrets
+        image: busybox:1.28
+        command: ['sh', '-c', 'cp /etc/cloudkitty-config/* /etc/cloudkitty/; for i in /etc/cloudkitty-secret/*; do pass=$(cat $i); i="$"${i##*/}; sed -i "s|$i|$pass|" /etc/cloudkitty/cloudkitty.conf; done;']
+        volumeMounts:
+          - name: config-volume-processor
+            mountPath: /etc/cloudkitty-config
+          - name: secret-ck-processor
+            mountPath: /etc/cloudkitty-secret
+          - name: workdir
+            mountPath: /etc/cloudkitty
+      - name: init-sql
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup {{ .Values.config.credentials.sql.host }}; do echo waiting for SQL; sleep 2; done;"]
+      - name: init-timeseries
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup {{ .Values.config.credentials.timeseries.host }}; do echo waiting for TIMESERIES; sleep 2; done;"]
+      - name: init-amqp
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup {{ .Values.config.credentials.amqp.host }}; do echo waiting for AMQP; sleep 2; done;"]
+      - name: init-db-storage
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command: ['sh', '-c', 'cloudkitty-storage-init && cloudkitty-dbsync upgrade']
+        volumeMounts:
+          - name: workdir
+            mountPath: /etc/cloudkitty
+      volumes:
+        - name: config-volume-processor
+          configMap:
+            name: {{ .Values.config.name }}
+        - name: workdir
+          emptyDir: {}
+        - name: secret-ck-processor
+          secret:
+            secretName: {{ .Values.secret.name }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

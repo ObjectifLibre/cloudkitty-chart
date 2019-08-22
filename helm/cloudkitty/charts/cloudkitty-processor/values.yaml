@@ -17,6 +17,34 @@ service:
   type: ClusterIP
   port: 80
 
+config:
+  enabled: true
+  name: "cloudkitty-processor-config"
+  credentials:
+    sql:
+      host: "test-cloudkitty-mariadb.cloudkitty.svc.cluster.local"
+      user: "cloudkitty"
+      password: "cloudkitty"
+      database: "cloudkitty"
+    timeseries:
+      host: "test-cloudkitty-influxdb.cloudkitty.svc.cluster.local"
+      user: "cloudkitty"
+      password: "cloudkitty"
+    amqp:
+      host: "test-cloudkitty-rabbitmq.cloudkitty.svc.cluster.local"
+      user: "cloudkitty"
+      password: "cloudkitty"
+    cache:
+      host: "test-cloudkitty-redis-master.cloudkitty.svc.cluster.local"
+      user: "redis"
+      password: "cloudkitty"
+    prometheus:
+      host: "http://prometheus-server.prometheus.svc.cluster.local/api/v1"
+
+secret:
+  enabled: true
+  name: cloudkitty-processor-secret
+
 ingress:
   enabled: false
   annotations: {}
